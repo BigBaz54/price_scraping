@@ -1,8 +1,14 @@
 import requests
 
 
-def test_headers():
+def test_headers(proxy=None):
     session = requests.Session()
+    if proxy:
+        proxies = {
+            'http': proxy,
+            'https': proxy
+        }
+        session.proxies = proxies
     headers = {
         "accept": "application/json, text/plain, */*",
         "accept-encoding": "gzip, deflate, br",
@@ -19,3 +25,7 @@ def test_headers():
     }
     response  = session.get('https://httpbin.org/headers', headers=headers)
     return response.json()["headers"]
+
+
+if __name__ == '__main__':
+    print(test_headers(proxy="http://djkofbcc:a2kk7zdq5o0e@2.56.119.93:5074"))
