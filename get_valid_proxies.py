@@ -76,3 +76,47 @@ def get_one_valid_proxy():
             return proxy_url
         except Exception:
             pass
+
+def get_valid_proxies_bis(n=10):
+    response = requests.get("https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=responseTime&sort_type=desc&filterLastChecked=1")
+    proxies = response.json()
+    good_proxies = []
+    url = "https://httpbin.org/ip"
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "referer": "https://www.carrefour.fr/p/liqueur-get-27-7610113019214",
+        "sec-ch-ua": '"Chromium";v="112", "Not_A Brand";v="24", "Opera GX";v="98"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 OPR/98.0.0.0",
+        "x-requested-with": "XMLHttpRequest",
+    }
+    print(f"Found {len(proxies['data'])} proxies")
+    for proxy in proxies["data"]:
+        ip = proxy["ip"]
+        port = proxy["port"]
+        proxy_url = f"http://{ip}:{port}"
+        proxies = {
+            "http": proxy_url,
+            "https": proxy_url,
+        }
+        
+        try:
+            response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
+            good_proxies.append(proxy_url)
+            print(f"Proxy {proxy_url} OK, added to good_proxy list")
+            if len(good_proxies) == n:
+                return good_proxies
+        except Exception:
+            print(f"Proxy {proxy_url} KO")
+            pass
+    return good_proxies
+
+
+if __name__ == "__main__":
+    get_valid_proxies_bis()
