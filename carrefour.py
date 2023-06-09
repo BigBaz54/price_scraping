@@ -1,7 +1,8 @@
 import requests
+from bs4 import BeautifulSoup
 from test_headers import test_headers
 
-def get_carrefour(store, proxy=None):
+def get_carrefour_soup(store, proxy=None):
     session = requests.Session()
     if proxy:
         proxies = {
@@ -25,9 +26,12 @@ def get_carrefour(store, proxy=None):
     }
     session.cookies.set('FRONTAL_STORE', store)
     session.headers = headers
-    response = session.get('https://www.cora.fr/article/2781138/get-27-70cl-17-9-vol.html')
-    return response
-
+    response = session.get('https://www.carrefour.fr/p/liqueur-get-27-7610113019214')
+    if response.status_code != 200:
+        return None
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    return soup
 
 if __name__ == '__main__':
-    print(get_carrefour('1'))
+    print(get_carrefour_soup('1'))
