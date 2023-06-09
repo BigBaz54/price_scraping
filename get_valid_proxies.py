@@ -50,7 +50,6 @@ def get_one_valid_proxy():
     print(f"Found {len(https_proxies)} proxies")
           
     url = "https://httpbin.org/ip"
-    good_proxies = []
     headers = {
         "accept": "application/json, text/plain, */*",
         "accept-encoding": "gzip, deflate, br",
@@ -73,6 +72,7 @@ def get_one_valid_proxy():
         
         try:
             response = requests.get(url, headers=headers, proxies=proxies, timeout=2)
+            print(f"Proxy {proxy_url} OK")
             return proxy_url
         except Exception:
             pass
