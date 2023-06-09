@@ -1,7 +1,7 @@
 import requests
 from test_headers import test_headers
 
-def get_carrefour(proxy=None):
+def get_carrefour(store, proxy=None):
     session = requests.Session()
     if proxy:
         proxies = {
@@ -23,10 +23,11 @@ def get_carrefour(proxy=None):
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 OPR/98.0.0.0",
         "x-requested-with": "XMLHttpRequest",
     }
+    session.cookies.set('FRONTAL_STORE', store)
     session.headers = headers
     response = session.get('https://www.cora.fr/article/2781138/get-27-70cl-17-9-vol.html')
     return response
 
 
 if __name__ == '__main__':
-    print(get_carrefour())
+    print(get_carrefour('1'))
