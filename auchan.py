@@ -16,7 +16,7 @@ def get_product_page(driver, url):
     driver.implicitly_wait(10)
     driver.find_element(By.ID, 'onetrust-reject-all-handler').click()
 
-def get_price(driver):
+def read_price(driver):
     price = driver.execute_script(
         """
             price = document.querySelectorAll('div.offer-selector__add2cart-wrapper > section:nth-child(1) > div > .product-price')[0].innerText;
@@ -149,7 +149,7 @@ if __name__ == '__main__':
         switch_stores(driver, store_info, journey_id)
         time.sleep(2)
         try:
-            print(get_price(driver))
+            print(read_price(driver))
         except:
             print('No price found')
     while True:
