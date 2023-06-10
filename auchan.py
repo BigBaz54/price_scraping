@@ -118,7 +118,7 @@ def get_french_cities_coordinates():
         data = json.load(f)
     return data
 
-def get_all_stores_info(gps_coordinates):
+def get_all_stores_info(gps_coordinates, write_to_file=False):
     stores_ids = set()
     stores_info = []
     for coord in gps_coordinates:
@@ -129,24 +129,28 @@ def get_all_stores_info(gps_coordinates):
                 stores_ids.add(store['seller_id'])
                 print("New store found: ", store["seller_id"])
                 stores_info.append(store)
+                last_city_with_store = coord['city']
+    if write_to_file:
+        with open('stores_info.json', 'w') as f:
+            json.dump(stores_info, f)
+    print("Last city with stores", last_city_with_store)
     return stores_info
 
 if __name__ == '__main__':
-    # stores_info = get_nearby_stores_info()
-    # driver = init_driver()
-    # get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
-    # journey_id = get_new_journey_id(driver)
-    # set_journey_id(driver, journey_id)
-    # for store_info in stores_info:
-    #     switch_stores(driver, store_info, journey_id)
-    #     time.sleep(2)
-    #     try:
-    #         print(get_price(driver))
-    #     except:
-    #         print('No price found')
-    # while True:
-    #     pass
     gps_coordinates = get_french_cities_coordinates()
-    print(len(get_all_stores_info(gps_coordinates)))
-
-
+    # stores_info = get_all_stores_info(gps_coordinates, write_to_file=True)
+    with open('stores_info.json', 'r') as f:
+        stores_info = json.load(f)
+    driver = init_driver()
+    get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
+    journey_id = get_new_journey_id(driver)
+    set_journey_id(driver, journey_id)
+    for store_info in stores_info:
+        switch_stores(driver, store_info, journey_id)
+        time.sleep(2)
+        try:
+            print(get_price(driver))
+        except:
+            print('No price found')
+    while True:
+        pass
