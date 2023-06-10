@@ -17,7 +17,7 @@ def get_product_page(driver, url):
 def get_price(driver):
     price = driver.execute_script(
         """
-            price = document.getElementsByClassName('product-price')[0].innerText;
+            price = document.querySelectorAll('div.offer-selector__add2cart-wrapper > section:nth-child(1) > div > .product-price')[0].innerText;
             return price;
         """
     )
@@ -116,14 +116,14 @@ if __name__ == '__main__':
     driver = init_driver()
     get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
     journey_id = get_new_journey_id(driver)
-    # set_journey_id(driver, journey_id)
-    # for store_info in stores_info:
-    #     switch_stores(driver, store_info, journey_id)
-    #     time.sleep(2)
-    #     try:
-    #         print(get_price(driver))
-    #     except:
-    #         pass
+    set_journey_id(driver, journey_id)
+    for store_info in stores_info:
+        switch_stores(driver, store_info, journey_id)
+        time.sleep(2)
+        try:
+            print(get_price(driver))
+        except:
+            print('No price found')
     while True:
         pass
 
