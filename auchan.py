@@ -45,7 +45,7 @@ def get_new_journey_id(driver):
 def set_journey_id(driver, journey_id):
     driver.add_cookie({'name': 'lark-journey', 'value': journey_id})
     
-def use_new_store(driver, store_info, journey_id):
+def switch_stores(driver, store_info, journey_id):
     driver.execute_script(
         """
             fetch("https://www.auchan.fr/journey/update", {
