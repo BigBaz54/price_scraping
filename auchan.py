@@ -135,21 +135,26 @@ def get_all_stores_info(gps_coordinates, write_to_file=False):
     print("Last city with stores", last_city_with_store)
     return stores_info
 
-if __name__ == '__main__':
-    gps_coordinates = get_french_cities_coordinates()
-    # stores_info = get_all_stores_info(gps_coordinates, write_to_file=True)
-    with open('stores_info.json', 'r') as f:
-        stores_info = json.load(f)
-    driver = init_driver()
-    get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
+def get_all_prices(driver, product_url, stores_info):
+    prices = []
+    get_product_page(driver, product_url)
     journey_id = get_new_journey_id(driver)
     set_journey_id(driver, journey_id)
     for store_info in stores_info:
         switch_stores(driver, store_info, journey_id)
         time.sleep(2)
         try:
-            print(read_price(driver))
+            price = read_price(driver)
+            prices.append(price)
+            print(price)
         except:
             print('No price found')
-    while True:
-        pass
+    return prices
+
+if __name__ == '__main__':
+    gps_coordinates = get_french_cities_coordinates()
+    # stores_info = get_all_stores_info(gps_coordinates, write_to_file=True)
+    with open('stores_info.json', 'r') as f:
+        stores_info = json.load(f)
+    driver = init_driver()
+    prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info)
