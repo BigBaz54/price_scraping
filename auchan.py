@@ -1,3 +1,4 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
@@ -112,11 +113,17 @@ def get_nearby_stores_info(latitude=48.99372222373215, longitude=6.2834096415940
         stores.append(store)
     return stores
 
+def get_french_cities_coordinates():
+    with open('french_cities.json', 'r') as f:
+        data = json.load(f)
+    return data
+
 def get_all_stores_info(gps_coordinates):
     stores_ids = set()
     stores_info = []
     for coord in gps_coordinates:
-        nearby_stores = get_nearby_stores_info(coord['latitude'], coord['longitude'])
+        print("Looking for stores near: ", coord['city'])
+        nearby_stores = get_nearby_stores_info(coord['lat'], coord['lng'])
         for store in nearby_stores:
             if store['seller_id'] not in stores_ids:
                 stores_ids.add(store['seller_id'])
@@ -125,19 +132,21 @@ def get_all_stores_info(gps_coordinates):
     return stores_info
 
 if __name__ == '__main__':
-    stores_info = get_nearby_stores_info()
-    driver = init_driver()
-    get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
-    journey_id = get_new_journey_id(driver)
-    set_journey_id(driver, journey_id)
-    for store_info in stores_info:
-        switch_stores(driver, store_info, journey_id)
-        time.sleep(2)
-        try:
-            print(get_price(driver))
-        except:
-            print('No price found')
-    while True:
-        pass
+    # stores_info = get_nearby_stores_info()
+    # driver = init_driver()
+    # get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
+    # journey_id = get_new_journey_id(driver)
+    # set_journey_id(driver, journey_id)
+    # for store_info in stores_info:
+    #     switch_stores(driver, store_info, journey_id)
+    #     time.sleep(2)
+    #     try:
+    #         print(get_price(driver))
+    #     except:
+    #         print('No price found')
+    # while True:
+    #     pass
+    gps_coordinates = get_french_cities_coordinates()
+    print(len(get_all_stores_info(gps_coordinates)))
 
 
