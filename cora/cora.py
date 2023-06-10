@@ -15,7 +15,12 @@ def get_product_page(driver, url):
     driver.find_element(By.ID, 'onetrust-accept-btn-handler').click()
 
 def read_price(driver):
-    price = driver.find_element(By.CSS_SELECTOR, 'div.c-product-detail__wrapper > div.c-product-detail__informations > div.c-product-detail__detail > div > div.c-price.c-product__price.c-price--xxlg > p > span:nth-child(1)').text
+    price = driver.execute_script(
+        """
+            price = document.querySelectorAll('div.c-product-detail__wrapper > div.c-product-detail__informations > div.c-product-detail__detail > div > div.c-price.c-product__price.c-price--xxlg > p > span:nth-child(1)')[0].innerText;
+            return price;
+        """
+    )
     price = float(price.replace(',', '.').strip())
     return price
 
