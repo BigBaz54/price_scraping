@@ -116,10 +116,14 @@ if __name__ == '__main__':
     driver = init_driver()
     get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
     journey_id = get_new_journey_id(driver)
-    set_journey_id(driver, journey_id)
-    for store_info in stores_info:
-        switch_stores(driver, store_info, journey_id)
-        print(get_price(driver))
+    # set_journey_id(driver, journey_id)
+    # for store_info in stores_info:
+    #     switch_stores(driver, store_info, journey_id)
+    #     time.sleep(2)
+    #     try:
+    #         print(get_price(driver))
+    #     except:
+    #         pass
     while True:
         pass
 
