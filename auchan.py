@@ -80,7 +80,6 @@ def switch_stores(driver, store_info, journey_id):
             "mode": "cors",
             "credentials": "include"
         }});"""
-    print(request)
     driver.execute_script(request)
     driver.refresh()
 
