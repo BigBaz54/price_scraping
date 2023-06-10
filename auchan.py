@@ -12,6 +12,7 @@ def get_product_page(driver, url):
     driver.implicitly_wait(10)
     driver.find_element(By.ID, 'onetrust-reject-all-handler').click()
 
+def get_new_journey_id(driver):
     # asking server for a new journey id
     journey_id = driver.execute_script(
         """
@@ -40,12 +41,41 @@ def get_product_page(driver, url):
         """
     )
     return journey_id
+
+def set_journey_id(driver, journey_id):
+    driver.add_cookie({'name': 'lark-journey', 'value': journey_id})
     
+def use_new_store(driver, store_info, journey_id):
+    driver.execute_script(
+        """
+            fetch("https://www.auchan.fr/journey/update", {
+                "headers": {
+                    "accept": "application/json",
+                    "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "content-type": "application/x-www-form-urlencoded",
+                    "sec-ch-ua": "Not.A/Brand;v=8, Chromium;v=114, Google Chrome;v=114",
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": "Windows",
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-origin",
+                    "x-requested-with": "XMLHttpRequest"
+                },
+                "referrer": "https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720",
+                "referrerPolicy": "strict-origin-when-cross-origin",
+                "body": "offeringContext.seller.id={seller_id}&offeringContext.channels%5B0%5D={channels}&offeringContext.storeReference={store_ref}&journeyId={journey_id}",
+                "method": "POST",
+                "mode": "cors",
+                "credentials": "include"
+            });
+        """.format(seller_id = store_info['seller_id'], store_ref=store_info['store_ref'], channels=store_info['channels'], journey_id=journey_id)
+    )
 
 if __name__ == '__main__':
     driver = init_driver()
     get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
-    
+    journey_id = get_new_journey_id(driver)
+    set_journey_id(driver, journey_id)
     while True:
         pass
 
