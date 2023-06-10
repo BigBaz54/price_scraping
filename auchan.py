@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
 from bs4 import BeautifulSoup
+import numpy as np
 import time
 
 
@@ -111,6 +112,18 @@ def get_nearby_stores_info(latitude=48.99372222373215, longitude=6.2834096415940
         stores.append(store)
     return stores
 
+def get_all_stores_info(gps_coordinates):
+    stores_ids = set()
+    stores_info = []
+    for coord in gps_coordinates:
+        nearby_stores = get_nearby_stores_info(coord['latitude'], coord['longitude'])
+        for store in nearby_stores:
+            if store['seller_id'] not in stores_ids:
+                stores_ids.add(store['seller_id'])
+                print("New store found: ", store["seller_id"])
+                stores_info.append(store)
+    return stores_info
+
 if __name__ == '__main__':
     stores_info = get_nearby_stores_info()
     driver = init_driver()
@@ -126,4 +139,5 @@ if __name__ == '__main__':
             print('No price found')
     while True:
         pass
+
 
