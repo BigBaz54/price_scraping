@@ -42,7 +42,7 @@ def get_all_prices(driver, product_url, write_to_file=False):
         except:
             print('No price found')
     if write_to_file:
-        with open(os.path.join('auchan', f'prices_{product_url.split("/")[-1].split("-")[0]}.json'), 'w') as f:
+        with open(os.path.join('cora', f'prices_{product_url.split("/")[-1].split("-")[0]}.json'), 'w') as f:
             json.dump(prices, f)
     return prices
 
