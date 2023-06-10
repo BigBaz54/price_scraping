@@ -158,3 +158,5 @@ if __name__ == '__main__':
         stores_info = json.load(f)
     driver = init_driver()
     prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info)
+    with open('prices.json', 'w') as f:
+        json.dump(prices, f)
