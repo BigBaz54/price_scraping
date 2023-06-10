@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
 from bs4 import BeautifulSoup
-import numpy as np
 import time
 
 
