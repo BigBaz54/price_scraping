@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 import requests
 from bs4 import BeautifulSoup
 import time
+import numpy as np
 
 
 def init_driver():
@@ -136,7 +137,7 @@ def get_all_stores_info(gps_coordinates, write_to_file=False):
     print("Last city with stores", last_city_with_store)
     return stores_info
 
-def get_all_prices(driver, product_url, stores_info):
+def get_all_prices(driver, product_url, stores_info, write_to_file=False):
     prices = []
     get_product_page(driver, product_url)
     journey_id = get_new_journey_id(driver)
@@ -150,6 +151,9 @@ def get_all_prices(driver, product_url, stores_info):
             print(price)
         except:
             print('No price found')
+    if write_to_file:
+        with open(os.path.join('auchan', f'prices_{product_url.split(".fr/")[1].split("-")[0]}.json'), 'w') as f:
+            json.dump(prices, f)
     return prices
 
 if __name__ == '__main__':
@@ -158,6 +162,8 @@ if __name__ == '__main__':
     with open(os.path.join('auchan', 'stores_info.json'), 'r') as f:
         stores_info = json.load(f)
     driver = init_driver()
-    prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info)
-    with open(os.path.join('auchan', 'prices.json'), 'w') as f:
-        json.dump(prices, f)
+    prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info, write_to_file=True)
+    print("Prices found: ", len(prices))
+    print("Min price: ", min(prices))
+    print("Average price: ", np.mean(prices))
+    print("Standard deviation: ", np.std(prices))
