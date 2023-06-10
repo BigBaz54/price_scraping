@@ -32,7 +32,7 @@ def switch_stores(driver, store_id):
 def get_all_prices(driver, product_url, write_to_file=False):
     prices = []
     get_product_page(driver, product_url)
-    for store_id in range(1, 200):
+    for store_id in ([1]+list(range(70, 170))):
         switch_stores(driver, store_id)
         time.sleep(2)
         try:
