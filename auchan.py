@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import requests
+from bs4 import BeautifulSoup
 import time
 
 
@@ -71,11 +73,40 @@ def switch_stores(driver, store_info, journey_id):
         """.format(seller_id = store_info['seller_id'], store_ref=store_info['store_ref'], channels=store_info['channels'], journey_id=journey_id)
     )
 
+def get_store_info():
+    headers = {
+        "accept": "application/crest",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "sec-ch-ua": 'Not.A/Brand;v=8, Chromium;v=114, Google Chrome;v=114',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9",
+        "x-crest-renderer": "journey-renderer",
+        "x-requested-with": "XMLHttpRequest",
+    }
+    response = requests.get('https://www.auchan.fr/offering-contexts?address.zipcode=54000&address.city=Nancy&address.country=France&location.latitude=48.69372222373215&location.longitude=6.183409641594068&accuracy=MUNICIPALITY&position=1&sellerType=GROCERY&channels=PICK_UP%2CSHIPPING', headers=headers)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    forms = soup.find_all('form', class_='journey-offering-contexts__form journeyChoice')
+    stores = []
+    for form in forms:
+        store = {}
+        store['seller_id'] = form.find('input', attrs={'name': 'sellerId'}).get('value')
+        store['channels'] = form.find('input', attrs={'name': 'channels'}).get('value')
+        store['storeReference'] = form.find('input', attrs={'name': 'storeReference'}).get('value')
+        stores.append(store)
+    return stores
+
 if __name__ == '__main__':
     driver = init_driver()
     get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
     journey_id = get_new_journey_id(driver)
     set_journey_id(driver, journey_id)
+    print(get_store_info())
     while True:
         pass
 
