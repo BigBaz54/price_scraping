@@ -73,7 +73,7 @@ def switch_stores(driver, store_info, journey_id):
         """.format(seller_id = store_info['seller_id'], store_ref=store_info['store_ref'], channels=store_info['channels'], journey_id=journey_id)
     )
 
-def get_store_info():
+def get_store_info(latitude=48.99372222373215, longitude=6.283409641594068):
     headers = {
         "accept": "application/crest",
         "accept-encoding": "gzip, deflate, br",
@@ -88,7 +88,7 @@ def get_store_info():
         "x-crest-renderer": "journey-renderer",
         "x-requested-with": "XMLHttpRequest",
     }
-    response = requests.get('https://www.auchan.fr/offering-contexts?address.zipcode=54000&address.city=Nancy&address.country=France&location.latitude=48.69372222373215&location.longitude=6.183409641594068&accuracy=MUNICIPALITY&position=1&sellerType=GROCERY&channels=PICK_UP%2CSHIPPING', headers=headers)
+    response = requests.get(f'https://www.auchan.fr/offering-contexts?address.zipcode=54000&location.latitude={latitude}&location.longitude={longitude}&accuracy=MUNICIPALITY&sellerType=GROCERY&channels=PICK_UP%2CSHIPPING', headers=headers)
     html = response.text
     soup = BeautifulSoup(html, "html.parser")
     forms = soup.find_all('form', class_='journey-offering-contexts__form journeyChoice')
@@ -102,11 +102,11 @@ def get_store_info():
     return stores
 
 if __name__ == '__main__':
-    driver = init_driver()
-    get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
-    journey_id = get_new_journey_id(driver)
-    set_journey_id(driver, journey_id)
+    # driver = init_driver()
+    # get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
+    # journey_id = get_new_journey_id(driver)
+    # set_journey_id(driver, journey_id)
     print(get_store_info())
-    while True:
-        pass
+    # while True:
+    #     pass
 
