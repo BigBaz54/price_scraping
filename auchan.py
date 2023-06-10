@@ -83,7 +83,7 @@ def switch_stores(driver, store_info, journey_id):
     driver.execute_script(request)
     driver.refresh()
 
-def get_store_info(latitude=48.99372222373215, longitude=6.283409641594068):
+def get_nearby_stores_info(latitude=48.99372222373215, longitude=6.283409641594068):
     headers = {
         "accept": "application/crest",
         "accept-encoding": "gzip, deflate, br",
@@ -112,7 +112,7 @@ def get_store_info(latitude=48.99372222373215, longitude=6.283409641594068):
     return stores
 
 if __name__ == '__main__':
-    stores_info = get_store_info()
+    stores_info = get_nearby_stores_info()
     driver = init_driver()
     get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
     journey_id = get_new_journey_id(driver)
