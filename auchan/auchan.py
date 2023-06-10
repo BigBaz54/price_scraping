@@ -1,4 +1,5 @@
 import json
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
@@ -113,7 +114,7 @@ def get_nearby_stores_info(latitude=48.99372222373215, longitude=6.2834096415940
     return stores
 
 def get_french_cities_coordinates():
-    with open('french_cities.json', 'r') as f:
+    with open(os.path.join('auchan', 'french_cities.json'), 'r') as f:
         data = json.load(f)
     return data
 
@@ -130,7 +131,7 @@ def get_all_stores_info(gps_coordinates, write_to_file=False):
                 stores_info.append(store)
                 last_city_with_store = coord['city']
     if write_to_file:
-        with open('stores_info.json', 'w') as f:
+        with open(os.path.join('auchan', 'stores_info.json'), 'w') as f:
             json.dump(stores_info, f)
     print("Last city with stores", last_city_with_store)
     return stores_info
@@ -154,9 +155,9 @@ def get_all_prices(driver, product_url, stores_info):
 if __name__ == '__main__':
     gps_coordinates = get_french_cities_coordinates()
     # stores_info = get_all_stores_info(gps_coordinates, write_to_file=True)
-    with open('stores_info.json', 'r') as f:
+    with open(os.path.join('auchan', 'stores_info.json'), 'r') as f:
         stores_info = json.load(f)
     driver = init_driver()
     prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info)
-    with open('prices.json', 'w') as f:
+    with open(os.path.join('auchan', 'prices.json'), 'w') as f:
         json.dump(prices, f)
