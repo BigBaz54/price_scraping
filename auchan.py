@@ -14,6 +14,16 @@ def get_product_page(driver, url):
     driver.implicitly_wait(10)
     driver.find_element(By.ID, 'onetrust-reject-all-handler').click()
 
+def get_price(driver):
+    price = driver.execute_script(
+        """
+            price = document.getElementsByClassName('product-price')[0].innerText;
+            return price;
+        """
+    )
+    price = float(price.replace('€', '').replace(',', '.').strip())
+    return price
+
 def get_new_journey_id(driver):
     # asking server for a new journey id
     journey_id = driver.execute_script(
@@ -46,6 +56,7 @@ def get_new_journey_id(driver):
 
 def set_journey_id(driver, journey_id):
     driver.add_cookie({'name': 'lark-journey', 'value': journey_id})
+    driver.refresh()
     
 def switch_stores(driver, store_info, journey_id):
     driver.execute_script(
@@ -102,11 +113,13 @@ def get_store_info(latitude=48.99372222373215, longitude=6.283409641594068):
     return stores
 
 if __name__ == '__main__':
-    # driver = init_driver()
-    # get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
-    # journey_id = get_new_journey_id(driver)
-    # set_journey_id(driver, journey_id)
-    print(get_store_info())
-    # while True:
-    #     pass
+    driver = init_driver()
+    get_product_page(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720')
+    journey_id = get_new_journey_id(driver)
+    set_journey_id(driver, journey_id)
+    driver.refresh()
+    print(get_price(driver))
+    # print(get_store_info())
+    while True:
+        pass
 
