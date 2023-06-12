@@ -70,7 +70,7 @@ def get_all_prices(product_id=1704605, write_to_file=False):
         except:
             print("No price found")
     if write_to_file:
-        with open(os.path.join(('match', 'prices.json'), 'w')) as f:
+        with open(os.path.join('match', 'prices.json'), 'w') as f:
             json.dump(prices, f)
     return prices
 
