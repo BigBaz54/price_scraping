@@ -55,17 +55,20 @@ def get_price(product_id=1704605, store_id=1):
             "device":"COMPUTER"
         }
     }
-    try:
-        response = requests.post("https://merch.drive.supermarchesmatch.fr/prd-smm-gXXhCuExuH2h8bF7Pajk/3.0/simplePageContent", headers=headers, json=data)
-        return list(response.json()['items'].items())[0][1]['price']
-    except:
-        print('No price found')
+    response = requests.post("https://merch.drive.supermarchesmatch.fr/prd-smm-gXXhCuExuH2h8bF7Pajk/3.0/simplePageContent", headers=headers, json=data)
+    price = list(response.json()['items'].items())[0][1]['price']
+    return price
 
 def get_all_prices(product_id=1704605, write_to_file=False):
     store_ids = get_all_store_ids()
     prices = []
     for store_id in store_ids:
-        prices.append(get_price(product_id, store_id))
+        try:
+            price = get_price(product_id, store_id)
+            prices.append(price)
+            print(price)
+        except:
+            print("No price found")
     if write_to_file:
         with open(os.path.join(('match', 'prices.json'), 'w')) as f:
             json.dump(prices, f)
