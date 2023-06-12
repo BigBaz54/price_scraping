@@ -65,11 +65,13 @@ def get_all_prices(product_id=1704605, write_to_file=False):
     prices = []
     for store_id in store_ids:
         try:
-            price = get_price(product_id, store_id)
+            price = get_price(product_id)
+            # it seems that a price of 999.99 means that the product is not available
+            assert (price != 999.99)
             prices.append(price)
             print(price)
         except:
-            print("No price found")
+            print("No price found", store_id)
     if write_to_file:
         with open(os.path.join('match', 'prices.json'), 'w') as f:
             json.dump(prices, f)
