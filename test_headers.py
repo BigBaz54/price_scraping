@@ -28,4 +28,4 @@ def test_headers(proxy=None):
 
 
 if __name__ == '__main__':
-    print(test_headers(proxy="http://djkofbcc:a2kk7zdq5o0e@2.56.119.93:5074"))
+    print(test_headers())
