@@ -86,7 +86,7 @@ def switch_stores(driver, store_info, journey_id):
     driver.execute_script(request)
     driver.refresh()
 
-def get_nearby_stores_info(latitude=48.99372222373215, longitude=6.283409641594068):
+def get_nearby_store_infos(latitude=48.99372222373215, longitude=6.283409641594068):
     headers = {
         "accept": "application/crest",
         "accept-encoding": "gzip, deflate, br",
@@ -119,30 +119,30 @@ def get_french_cities_coordinates():
         data = json.load(f)
     return data
 
-def get_all_stores_info(gps_coordinates, write_to_file=False):
+def get_all_store_infos(gps_coordinates, write_to_file=False):
     stores_ids = set()
-    stores_info = []
+    store_infos = []
     for coord in gps_coordinates:
         print("Looking for stores near: ", coord['city'])
-        nearby_stores = get_nearby_stores_info(coord['lat'], coord['lng'])
+        nearby_stores = get_nearby_store_infos(coord['lat'], coord['lng'])
         for store in nearby_stores:
             if store['seller_id'] not in stores_ids:
                 stores_ids.add(store['seller_id'])
                 print("New store found: ", store["seller_id"])
-                stores_info.append(store)
+                store_infos.append(store)
                 last_city_with_store = coord['city']
     if write_to_file:
-        with open(os.path.join('auchan', 'stores_info.json'), 'w') as f:
-            json.dump(stores_info, f)
+        with open(os.path.join('auchan', 'store_infos.json'), 'w') as f:
+            json.dump(store_infos, f)
     print("Last city with stores", last_city_with_store)
-    return stores_info
+    return store_infos
 
-def get_all_prices(driver, product_url, stores_info, write_to_file=False):
+def get_all_prices(driver, product_url, store_infos, write_to_file=False):
     prices = []
     get_product_page(driver, product_url)
     journey_id = get_new_journey_id(driver)
     set_journey_id(driver, journey_id)
-    for store_info in stores_info:
+    for store_info in store_infos:
         switch_stores(driver, store_info, journey_id)
         time.sleep(2)
         try:
@@ -158,11 +158,11 @@ def get_all_prices(driver, product_url, stores_info, write_to_file=False):
 
 if __name__ == '__main__':
     gps_coordinates = get_french_cities_coordinates()
-    # stores_info = get_all_store_infos(gps_coordinates, write_to_file=True)
-    with open(os.path.join('auchan', 'stores_info.json'), 'r') as f:
-        stores_info = json.load(f)
+    # store_infos = get_all_store_infos(gps_coordinates, write_to_file=True)
+    with open(os.path.join('auchan', 'store_infos.json'), 'r') as f:
+        store_infos = json.load(f)
     driver = init_driver()
-    prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', stores_info, write_to_file=True)
+    prices = get_all_prices(driver, 'https://www.auchan.fr/get-27-liqueur-a-base-de-menthe-17-9/pr-C1586720', store_infos, write_to_file=True)
     print("Prices found: ", len(prices))
     print("Min price: ", min(prices))
     print("Average price: ", np.mean(prices))
