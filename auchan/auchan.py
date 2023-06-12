@@ -119,7 +119,7 @@ def get_french_cities_coordinates():
         data = json.load(f)
     return data
 
-def get_all_store_infos(gps_coordinates, write_to_file=False):
+def get_all_stores_info(gps_coordinates, write_to_file=False):
     stores_ids = set()
     stores_info = []
     for coord in gps_coordinates:
@@ -158,7 +158,7 @@ def get_all_prices(driver, product_url, stores_info, write_to_file=False):
 
 if __name__ == '__main__':
     gps_coordinates = get_french_cities_coordinates()
-    # stores_info = get_all_stores_info(gps_coordinates, write_to_file=True)
+    # stores_info = get_all_store_infos(gps_coordinates, write_to_file=True)
     with open(os.path.join('auchan', 'stores_info.json'), 'r') as f:
         stores_info = json.load(f)
     driver = init_driver()
