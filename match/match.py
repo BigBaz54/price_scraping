@@ -1,4 +1,6 @@
+import os
 import requests
+import json
 
 
 def get_all_store_ids():
@@ -23,6 +25,52 @@ def get_all_store_ids():
         store_ids.append(store['id'])
     return store_ids
 
+def get_price(product_id=1704605, store_id=1):
+    headers = {
+        "accept": "application/json",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "sec-ch-ua": 'Not.A/Brand;v=8, Chromium;v=114, Google Chrome;v=114',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9",
+        "x-crest-renderer": "journey-renderer",
+        "x-requested-with": "XMLHttpRequest",
+    }
+    data = {
+        "moduleVersion":"drive",
+        "sessionId":"83d260b4310bc15e4ffa6d6e86c3aa85",
+        "region":"fr_FR",
+        "pageId":2,
+        "parameters":{
+            "skus":[
+                str(product_id)
+            ]
+        },
+        "advanced":{
+            "store":store_id,
+            "device":"COMPUTER"
+        }
+    }
+    try:
+        response = requests.post("https://merch.drive.supermarchesmatch.fr/prd-smm-gXXhCuExuH2h8bF7Pajk/3.0/simplePageContent", headers=headers, json=data)
+        return list(response.json()['items'].items())[0][1]['price']
+    except:
+        print('No price found')
+
+def get_all_prices(product_id=1704605, write_to_file=False):
+    store_ids = get_all_store_ids()
+    prices = []
+    for store_id in store_ids:
+        prices.append(get_price(product_id, store_id))
+    if write_to_file:
+        with open(os.path.join(('match', 'prices.json'), 'w')) as f:
+            json.dump(prices, f)
+    return prices
 
 if __name__ == '__main__':
-    print(get_all_store_ids())
+    prices = get_all_prices(write_to_file=True)
+    
