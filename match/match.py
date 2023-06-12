@@ -73,4 +73,8 @@ def get_all_prices(product_id=1704605, write_to_file=False):
 
 if __name__ == '__main__':
     prices = get_all_prices(write_to_file=True)
+    print("Prices found: ", len(prices))
+    print("Min price: ", min(prices))
+    print("Average price: ", np.mean(prices))
+    print("Standard deviation: ", np.std(prices))
     
