@@ -119,7 +119,7 @@ def get_french_cities_coordinates():
         data = json.load(f)
     return data
 
-def get_all_stores_info(gps_coordinates, write_to_file=False):
+def get_all_store_infos(gps_coordinates, write_to_file=False):
     stores_ids = set()
     stores_info = []
     for coord in gps_coordinates:
