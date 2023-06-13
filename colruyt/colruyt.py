@@ -75,7 +75,7 @@ def get_all_prices(product_url, store_ids, proxies=False, write_to_file=False):
         else:
             print("No price found")
     if write_to_file:
-        with open(os.path.join('colruyt', f'prices_{product_url.split("/")[1].split("_")[0]}.json')) as f:
+        with open(os.path.join('colruyt', f'prices_{product_url.split("/")[-1].split("_")[0]}.json'), 'w') as f:
             f.write(json.dumps(prices))
 
 
