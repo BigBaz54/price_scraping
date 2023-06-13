@@ -8,6 +8,8 @@ Clone the repo and run
     
     pip install -r requirements.txt
 
+Examples of usage are available at the end of each file.
+
 ## How it works
 ### **Auchan**
 
