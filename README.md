@@ -2,6 +2,8 @@
 
 This project is a tool that allows you to retrieve the prices of a product from all of the stores of most of the major French retail chains.
 
+It provided an opportunity to learn about sending requests using `Python` while implementing techniques to avoid detection. Additionally, it allowed for experimentation with `Selenium` and `BeautifulSoup` enabling interaction with web elements and extracting data effectively.
+
 ## Installation
 
 Clone the repo and run 
