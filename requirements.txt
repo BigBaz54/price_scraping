@@ -1,0 +1,9 @@
+# selenium
+selenium
+bs4
+json
+numpy
+requests
+os
+time
+base64
