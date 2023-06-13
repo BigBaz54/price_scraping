@@ -3,6 +3,8 @@
 This project is a tool that allows you to retrieve the prices of a product from all of the stores of most of the major French retail chains.
 
 ## Installation
+
+Clone the repo and run 
     
     pip install -r requirements.txt
 
