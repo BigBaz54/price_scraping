@@ -1,7 +1,8 @@
 import base64
-import time
 import requests
 import json
+import os
+import numpy as np
 
 
 def get_all_store_ids():
@@ -55,8 +56,28 @@ def get_price(product_url, store_id=7426, proxy=None):
     except:
         print("Request was blocked (proxies could be used to bypass this)")
         return None
+    
+def get_all_prices(product_url, store_ids, proxies=False, write_to_file=False):
+    prices = []
+    if proxies:
+        proxies = get_proxies()
+        n = len(proxies)
+    for i, store_id in enumerate(store_ids):
+        price = get_price(product_url, store_id, proxies[i % n] if proxies else None)
+        if price:
+            prices.append(price)
+            print(price)
+        else:
+            print("No price found")
+    if write_to_file:
+        with open(os.path.join('colruyt', f'prices_{product_url.split("/")[1].split("_")[0]}.json')) as f:
+            f.write(json.dumps(prices))
+
 
 if __name__ == "__main__":
-    # print(get_all_store_ids())
-    print(get_price("https://www.collectandgo.fr/cogofr/fr/detail_article/1822/GET_27_Liqueur_de_menthe_17_9__Bl_70cl"))
-                    
+    store_ids = get_all_store_ids()
+    prices = get_all_prices("https://www.collectandgo.fr/cogofr/fr/detail_article/1822/GET_27_Liqueur_de_menthe_17_9__Bl_70cl", store_ids, proxies=False, write_to_file=True)
+    print("Prices found: ", len(prices))
+    print("Min price: ", min(prices))
+    print("Average price: ", np.mean(prices))
+    print("Standard deviation: ", np.std(prices))
