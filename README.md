@@ -15,14 +15,6 @@ The information about the stores nearby a location can be retrieved by sending a
 
 The requests are sent to the API with the `requests` library and the prices are read from the page using `Selenium` because Javascript had to be enabled to load them.
 
-### **Carrefour**
-
-The store_ids are retrieved from their API with a bunch of requests. 
-
-The store of reference is saved using a cookie. 
-
-We get the product page with `Selenium` and then iterate over the store_ids, updating the cookie to switch stores and then reading the price from the page.
-
 ### **Colruyt**
 
 The ids of all the stores are retrieved from their API with a single request.
@@ -32,6 +24,14 @@ The store of reference is updated by sending a request to their API with the sto
 The price is parsed from the html response of a request to the product page and decoded from base64.
 
 We are getting IP blocked after a few requests, so we are using rotating proxies from `proxies.json` to bypass this.
+
+### **Carrefour**
+
+The store_ids are retrieved from their API with a bunch of requests. 
+
+The store of reference is saved using a cookie. 
+
+We get the product page with `Selenium` and then iterate over the store_ids, updating the cookie to switch stores and then reading the price from the page.
 
 ### **Cora**
 
