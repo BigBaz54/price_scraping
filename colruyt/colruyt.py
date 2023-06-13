@@ -57,6 +57,11 @@ def get_price(product_url, store_id=7426, proxy=None):
         print("Request was blocked (proxies could be used to bypass this)")
         return None
     
+def get_proxies():
+    with open(os.path.join('colruyt', 'proxies.json')) as f:
+        proxies = json.loads(f.read())
+    return proxies
+    
 def get_all_prices(product_url, store_ids, proxies=False, write_to_file=False):
     prices = []
     if proxies:
@@ -76,7 +81,7 @@ def get_all_prices(product_url, store_ids, proxies=False, write_to_file=False):
 
 if __name__ == "__main__":
     store_ids = get_all_store_ids()
-    prices = get_all_prices("https://www.collectandgo.fr/cogofr/fr/detail_article/1822/GET_27_Liqueur_de_menthe_17_9__Bl_70cl", store_ids, proxies=False, write_to_file=True)
+    prices = get_all_prices("https://www.collectandgo.fr/cogofr/fr/detail_article/1822/GET_27_Liqueur_de_menthe_17_9__Bl_70cl", store_ids, proxies=True, write_to_file=True)
     print("Prices found: ", len(prices))
     print("Min price: ", min(prices))
     print("Average price: ", np.mean(prices))
