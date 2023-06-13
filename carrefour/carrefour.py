@@ -1,8 +1,6 @@
 import json
 import os
-from bs4 import BeautifulSoup
 import numpy as np
-import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time

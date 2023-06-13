@@ -3,7 +3,6 @@ import requests
 import json
 import numpy as np
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 import time
 
 
